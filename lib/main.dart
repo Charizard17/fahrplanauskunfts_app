@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:timetable_info_app/providers/search_provider.dart';
+import 'package:timetable_info_app/screens/main_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SearchProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +27,7 @@ class MyApp extends StatelessWidget {
       home: Container(
         color: Colors.white,
         alignment: Alignment.center,
-        child: const Text("Home"),
+        child: MainScreen(),
       ),
     );
   }
