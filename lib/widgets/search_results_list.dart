@@ -51,31 +51,41 @@ class SearchResultItem extends StatelessWidget {
         border: Border.all(color: Colors.black, width: 0.5),
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(result.name),
-                Text("Ort: ${result.disassembledName}"),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  color: Colors.orange,
-                  result.isBest ? Icons.star : null,
+          Row(
+            children: [
+              if (result.isBest)
+                const Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.orange,
+                  ),
                 ),
-                Text("Typ: ${result.type}"),
-              ],
-            ),
+              Expanded(
+                child: Text(
+                  result.name,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Text("Ort: ${result.disassembledName}"),
+              ),
+              Container(
+                width: 100,
+                alignment: Alignment.centerRight,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text("Typ: ${result.type}"),
+                ),
+              ),
+            ],
           ),
         ],
       ),
