@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:journey_planner_app/models/search_result.dart';
 import 'package:journey_planner_app/widgets/search_results_list.dart';
-import 'package:journey_planner_app/providers/search_provider.dart';
+import 'package:journey_planner_app/services/search_service.dart';
+import 'package:journey_planner_app/widgets/shimmer_search_result_item.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   final TextEditingController _searchController = TextEditingController();
-  bool _searchPerformed = false;
+  late Future<List<SearchResult>> _searchFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFuture = Future.value([]);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final searchProvider = Provider.of<SearchProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -34,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
                     controller: _searchController,
                     textInputAction: TextInputAction.search,
                     onSubmitted: (_) {
-                      _performSearch(searchProvider, _searchController.text);
+                      _performSearch(_searchController.text);
                     },
                     decoration: InputDecoration(
                       hintText: 'Enter search text',
@@ -49,35 +56,51 @@ class _MainScreenState extends State<MainScreen> {
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
-                    _performSearch(searchProvider, _searchController.text);
+                    _performSearch(_searchController.text);
                   },
                 ),
               ],
             ),
             const SizedBox(height: 16.0),
-            if (!_searchPerformed)
-              Expanded(
-                child: Image.asset(
-                  'assets/images/itinerary.png',
-                  height: 200.0,
-                ),
-              ),
-            if (_searchPerformed)
-              Expanded(
-                child: SearchResultsList(
-                  results: searchProvider.searchResults,
-                ),
-              ),
+            Expanded(
+              child: _buildSearchResultWidget(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _performSearch(SearchProvider searchProvider, String searchText) {
+  Widget _buildSearchResultWidget() {
+    return FutureBuilder<List<SearchResult>>(
+      future: _searchFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return ListView.builder(
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return const ShimmerSearchResultItem();
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Image.asset(
+            'assets/images/itinerary.png',
+            height: 200.0,
+          );
+        } else {
+          return SearchResultsList(results: snapshot.data!);
+        }
+      },
+    );
+  }
+
+  void _performSearch(String searchText) {
     setState(() {
-      _searchPerformed = true;
+      _searchFuture = SearchService().searchResult(searchText);
     });
-    searchProvider.search(searchText);
   }
 }
