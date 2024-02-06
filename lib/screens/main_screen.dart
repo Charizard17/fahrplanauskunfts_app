@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:journey_planner_app/widgets/search_results_list.dart';
 import 'package:journey_planner_app/providers/search_provider.dart';
-import 'package:journey_planner_app/models/search_result.dart';
 
 class MainScreen extends StatelessWidget {
   final TextEditingController _searchController = TextEditingController();
@@ -47,34 +47,13 @@ class MainScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Expanded(
-              child: _buildSearchResults(searchProvider.searchResults),
+              child: SearchResultsList(
+                results: searchProvider.searchResults,
+              ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildSearchResults(List<SearchResult> results) {
-    if (results.isEmpty) {
-      return const Center(
-        child: Text('No search results'),
-      );
-    }
-
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final result = results[index];
-
-        return ListTile(
-          title: Text(result.name),
-          subtitle: Text(result.disassembledName),
-          trailing: Text(result.matchQuality.toString()),
-          // Customize the way you want to display additional information.
-          // For example: subtitle: Text(result.placeName ?? ''),
-        );
-      },
     );
   }
 }

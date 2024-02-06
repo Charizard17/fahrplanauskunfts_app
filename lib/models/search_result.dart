@@ -4,6 +4,8 @@ class SearchResult {
   final String type;
   final String disassembledName;
   final int matchQuality;
+  final List<double> coord;
+  final bool isBest;
 
   SearchResult({
     required this.id,
@@ -11,6 +13,8 @@ class SearchResult {
     required this.type,
     required this.disassembledName,
     required this.matchQuality,
+    required this.coord,
+    required this.isBest,
   });
 
   factory SearchResult.fromJson(Map<String, dynamic> json) {
@@ -20,6 +24,10 @@ class SearchResult {
       type: json['type'] ?? '',
       disassembledName: json['disassembledName'] ?? '',
       matchQuality: json['matchQuality'] ?? 0,
+      coord: (json['coord'] as List<dynamic>)
+          .map<double>((e) => e as double)
+          .toList(),
+      isBest: json['isBest'] ?? false,
     );
   }
 }
