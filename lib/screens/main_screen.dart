@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timetable_info_app/providers/search_provider.dart';
-import 'package:timetable_info_app/models/search_result.dart';
+import 'package:journey_planner_app/providers/search_provider.dart';
+import 'package:journey_planner_app/models/search_result.dart';
 
 class MainScreen extends StatelessWidget {
   final TextEditingController _searchController = TextEditingController();
@@ -12,7 +12,7 @@ class MainScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Timetable Information App'),
+        title: const Text('Journey Planner App'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

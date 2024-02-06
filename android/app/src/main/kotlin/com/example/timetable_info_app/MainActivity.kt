@@ -1,4 +1,4 @@
-package com.example.timetable_info_app
+package com.example.journey_planner_app
 
 import io.flutter.embedding.android.FlutterActivity
 

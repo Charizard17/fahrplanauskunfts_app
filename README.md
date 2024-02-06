@@ -1,4 +1,4 @@
-# timetable_info_app
+# journey_planner_app
 
 A new Flutter project.
 

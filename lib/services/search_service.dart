@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:timetable_info_app/models/search_result.dart';
+import 'package:journey_planner_app/models/search_result.dart';
 
 class SearchService {
   final Dio _dio = Dio();

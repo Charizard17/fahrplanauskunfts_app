@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timetable_info_app/providers/search_provider.dart';
-import 'package:timetable_info_app/screens/main_screen.dart';
+import 'package:journey_planner_app/providers/search_provider.dart';
+import 'package:journey_planner_app/screens/main_screen.dart';
 
 void main() {
   runApp(
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Timetable Info App',
+      title: 'Journey Planner App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

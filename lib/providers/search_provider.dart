@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:timetable_info_app/models/search_result.dart';
-import 'package:timetable_info_app/services/search_service.dart';
+import 'package:journey_planner_app/models/search_result.dart';
+import 'package:journey_planner_app/services/search_service.dart';
 
 class SearchProvider extends ChangeNotifier {
   final SearchService _searchService = SearchService();
