@@ -3,8 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:journey_planner_app/widgets/search_results_list.dart';
 import 'package:journey_planner_app/providers/search_provider.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   final TextEditingController _searchController = TextEditingController();
+  bool _searchPerformed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +34,7 @@ class MainScreen extends StatelessWidget {
                     controller: _searchController,
                     textInputAction: TextInputAction.search,
                     onSubmitted: (_) {
-                      searchProvider.search(_searchController.text);
+                      _performSearch(searchProvider, _searchController.text);
                     },
                     decoration: InputDecoration(
                       hintText: 'Enter search text',
@@ -43,20 +49,35 @@ class MainScreen extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
-                    searchProvider.search(_searchController.text);
+                    _performSearch(searchProvider, _searchController.text);
                   },
                 ),
               ],
             ),
             const SizedBox(height: 16.0),
-            Expanded(
-              child: SearchResultsList(
-                results: searchProvider.searchResults,
+            if (!_searchPerformed)
+              Expanded(
+                child: Image.asset(
+                  'assets/images/itinerary.png',
+                  height: 200.0,
+                ),
               ),
-            ),
+            if (_searchPerformed)
+              Expanded(
+                child: SearchResultsList(
+                  results: searchProvider.searchResults,
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  void _performSearch(SearchProvider searchProvider, String searchText) {
+    setState(() {
+      _searchPerformed = true;
+    });
+    searchProvider.search(searchText);
   }
 }

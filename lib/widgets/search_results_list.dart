@@ -10,7 +10,6 @@ class SearchResultsList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (results.isEmpty) {
       return const Center(
-        // TODO: add an image here
         child: Text('No search results'),
       );
     }
