@@ -16,17 +16,18 @@ class SearchResultsList extends StatelessWidget {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text("${results.length} locations found"),
+        const SizedBox(height: 5.0),
         Expanded(
           child: ListView.builder(
             itemCount: results.length,
             itemBuilder: (context, index) {
               final result = results[index];
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2.0),
-                child: SearchResultItem(result: result),
+              return SearchResultItem(
+                result: result,
               );
             },
           ),
@@ -43,18 +44,41 @@ class SearchResultItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      shape: RoundedRectangleBorder(
-        side: const BorderSide(color: Colors.black, width: 0.5),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+      margin: const EdgeInsets.only(bottom: 5.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black, width: 0.5),
         borderRadius: BorderRadius.circular(5),
       ),
-      title: Text(result.name),
-      subtitle: Text(result.disassembledName),
-      trailing: Icon(
-        color: Colors.orange,
-        result.isBest ? Icons.star : null,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(result.name),
+                Text("Ort: ${result.disassembledName}"),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  color: Colors.orange,
+                  result.isBest ? Icons.star : null,
+                ),
+                Text("Typ: ${result.type}"),
+              ],
+            ),
+          ),
+        ],
       ),
-      visualDensity: VisualDensity.compact,
     );
   }
 }
