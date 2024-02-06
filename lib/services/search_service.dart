@@ -8,24 +8,37 @@ class SearchService {
   Future<List<SearchResult>> searchResult(String searchText) async {
     try {
       final response = await _dio.get(
-        'https://mvvvip1.defas-fgi.de/mvv/XML_STOPFINDER_REQUEST?language=de&outputFormat=RapidJSON&coordOutputFormat=WGS84[DD:ddddd]&type_sf=any&name_sf=$searchText',
+        'https://mvvvip1.defas-fgi.de/mvv/XML_STOPFINDER_REQUEST?language=de&outputFormat=RapidJSON&type_sf=%20any&name_sf=$searchText',
       );
+
+      // Log the status code and headers for debugging
+      debugPrint('Response Status Code: ${response.statusCode}');
+      debugPrint('Response Headers: ${response.headers}');
 
       // Check if the request was successful (status code 200).
       if (response.statusCode == 200) {
         // Process the response and extract relevant information.
         List<SearchResult> results = [];
 
-        // Ensure the response is a list
-        if (response.data is List) {
+        // Print the raw response data for debugging
+
+        // Ensure the response is a map
+        if (response.data is Map<String, dynamic>) {
+          // Access the 'locations' key to get the list of results
           List<Map<String, dynamic>> data =
-              List<Map<String, dynamic>>.from(response.data);
+              List<Map<String, dynamic>>.from(response.data['locations']);
+
+          debugPrint('Number of locations: ${data.length}');
+          debugPrint('Locations: ${data.toString()}');
+
           results =
               data.map((result) => SearchResult.fromJson(result)).toList();
 
+          // Sort results by matchQuality in descending order
+          results.sort((a, b) => b.matchQuality.compareTo(a.matchQuality));
+
           // Filter results based on matchQuality >= 900
-          results =
-              results.where((result) => result.matchQuality >= 900).toList();
+          // results = results.where((result) => result.matchQuality >= 900).toList();
         } else {
           debugPrint('Unexpected response format');
         }
