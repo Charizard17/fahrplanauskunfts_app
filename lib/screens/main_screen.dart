@@ -1,7 +1,7 @@
-import 'package:fahrplanauskunfts_app/widgets/location_details.dart';
-import 'package:fahrplanauskunfts_app/widgets/location_list_item_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:fahrplanauskunfts_app/models/location.dart';
+import 'package:fahrplanauskunfts_app/widgets/location_details.dart';
+import 'package:fahrplanauskunfts_app/widgets/location_list_item_shimmer.dart';
 import 'package:fahrplanauskunfts_app/widgets/location_resutls_list.dart';
 import 'package:fahrplanauskunfts_app/services/location_search_service.dart';
 
@@ -13,14 +13,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final TextEditingController _searchQueryController = TextEditingController();
-  late Future<List<Location>> _searchLocationsFuture;
+  final TextEditingController _searchController = TextEditingController();
+  late Future<List<Location>> _searchFuture;
   Location? _selectedLocation;
 
   @override
   void initState() {
     super.initState();
-    _searchLocationsFuture = Future.value([]);
+    _searchFuture = Future.value([]);
   }
 
   @override
@@ -36,113 +36,104 @@ class _MainScreenState extends State<MainScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.location_pin,
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _searchQueryController,
-                    textInputAction: TextInputAction.search,
-                    onSubmitted: (_) {
-                      _performSearchLocations(_searchQueryController.text);
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Ort eingeben',
-                      suffixIcon: IconButton(
-                        onPressed: _searchQueryController.clear,
-                        icon: const Icon(Icons.clear),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8.0),
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    _performSearchLocations(_searchQueryController.text);
-                  },
-                ),
-              ],
-            ),
+            _buildSearchBar(),
             const SizedBox(height: 16.0),
-            Expanded(
-              child: _buildSearchLocationsWidget(),
-            ),
+            Expanded(child: _buildSearchResultsWidget()),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSearchLocationsWidget() {
-    if (_searchQueryController.text.isEmpty) {
+  Widget _buildSearchBar() {
+    return Row(
+      children: [
+        const Icon(Icons.location_pin),
+        Expanded(
+          child: TextField(
+            controller: _searchController,
+            textInputAction: TextInputAction.search,
+            onSubmitted: _performSearchLocations,
+            decoration: InputDecoration(
+              hintText: 'Ort eingeben',
+              suffixIcon: IconButton(
+                onPressed: _clearSearchQuery,
+                icon: const Icon(Icons.clear),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8.0),
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () => _performSearchLocations(_searchController.text),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchResultsWidget() {
+    if (_searchController.text.isEmpty) {
       return SizedBox(
         width: 200,
-        child: Image.asset(
-          'assets/images/itinerary.png',
-        ),
+        child: Image.asset('assets/images/itinerary.png'),
       );
     } else {
       return FutureBuilder<List<Location>>(
-        future: _searchLocationsFuture,
+        future: _searchFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return ListView.builder(
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return const LocationListItemShimmer();
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error: ${snapshot.error}'),
-                SizedBox(
-                  width: 200,
-                  child: Image.asset(
-                    'assets/images/crash.png',
-                  ),
-                ),
-                const Text(""),
-              ],
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Es wurden keine Orte gefunden.."),
-                SizedBox(
-                  width: 200,
-                  child: Image.asset(
-                    'assets/images/itinerary.png',
-                  ),
-                ),
-                const Text(""),
-              ],
-            );
+            return _buildShimmerList();
+          } else if (snapshot.hasError || snapshot.data!.isEmpty) {
+            return _buildNoResultsFound();
           } else {
-            return Column(
-              children: [
-                Expanded(
-                  child: LocationResultsList(
-                    results: snapshot.data!,
-                    onItemSelected: (result) {
-                      setState(() {
-                        _selectedLocation = result;
-                      });
-                      _showLocationDetailsBottomSheet(context);
-                    },
-                  ),
-                ),
-              ],
+            return LocationResultsList(
+              results: snapshot.data!,
+              onItemSelected: _showLocationDetails,
             );
           }
         },
       );
     }
+  }
+
+  Widget _buildShimmerList() {
+    return ListView.builder(
+      itemCount: 3,
+      itemBuilder: (context, index) => const LocationListItemShimmer(),
+    );
+  }
+
+  Widget _buildNoResultsFound() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Es wurden keine Orte gefunden.."),
+        SizedBox(
+          width: 200,
+          child: Image.asset('assets/images/itinerary.png'),
+        ),
+      ],
+    );
+  }
+
+  void _performSearchLocations(String searchText) {
+    setState(() {
+      _searchFuture = LocationSearchService().searchLocations(searchText);
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchController.clear();
+    });
+  }
+
+  void _showLocationDetails(Location location) {
+    setState(() {
+      _selectedLocation = location;
+    });
+    _showLocationDetailsBottomSheet(context);
   }
 
   void _showLocationDetailsBottomSheet(BuildContext context) {
@@ -153,12 +144,5 @@ class _MainScreenState extends State<MainScreen> {
         return LocationDetails(selectedResult: _selectedLocation!);
       },
     );
-  }
-
-  void _performSearchLocations(String searchText) {
-    setState(() {
-      _searchLocationsFuture =
-          LocationSearchService().searchLocations(searchText);
-    });
   }
 }
