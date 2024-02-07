@@ -1,5 +1,6 @@
-import 'package:fahrplanauskunfts_app/widgets/location_results_list.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:fahrplanauskunfts_app/widgets/location_results_list.dart';
 import 'package:fahrplanauskunfts_app/models/location.dart';
 import 'package:fahrplanauskunfts_app/widgets/location_details.dart';
 import 'package:fahrplanauskunfts_app/widgets/location_list_item_shimmer.dart';
@@ -9,6 +10,7 @@ class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _MainScreenState createState() => _MainScreenState();
 }
 
@@ -139,7 +141,9 @@ class _MainScreenState extends State<MainScreen> {
 
   void _performSearchLocations(String searchText) {
     setState(() {
-      _searchFuture = ApiLocationSearchService().searchLocations(searchText);
+      final client = http.Client();
+      _searchFuture =
+          ApiLocationSearchService().searchLocations(searchText, client);
     });
   }
 
