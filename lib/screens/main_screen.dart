@@ -36,6 +36,9 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             Row(
               children: [
+                const Icon(
+                  Icons.location_pin,
+                ),
                 Expanded(
                   child: TextField(
                     controller: _searchController,
@@ -44,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
                       _performSearch(_searchController.text);
                     },
                     decoration: InputDecoration(
-                      hintText: 'Enter search text',
+                      hintText: 'Enter location',
                       suffixIcon: IconButton(
                         onPressed: _searchController.clear,
                         icon: const Icon(Icons.clear),
@@ -72,30 +75,60 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildSearchResultWidget() {
-    return FutureBuilder<List<SearchResult>>(
-      future: _searchFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return ListView.builder(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return const ShimmerSearchResultItem();
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Image.asset(
-            'assets/images/itinerary.png',
-            height: 200.0,
-          );
-        } else {
-          return SearchResultsList(results: snapshot.data!);
-        }
-      },
-    );
+    // Check if a search has been performed
+    if (_searchController.text.isEmpty) {
+      return SizedBox(
+        width: 200,
+        child: Image.asset(
+          'assets/images/itinerary.png',
+        ),
+      );
+    } else {
+      // Show search results
+      return FutureBuilder<List<SearchResult>>(
+        future: _searchFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return ListView.builder(
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return const ShimmerSearchResultItem();
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Error: ${snapshot.error}'),
+                SizedBox(
+                  width: 200,
+                  child: Image.asset(
+                    'assets/images/crash.png',
+                  ),
+                ),
+                const Text(""),
+              ],
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("No locations found."),
+                SizedBox(
+                  width: 200,
+                  child: Image.asset(
+                    'assets/images/itinerary.png',
+                  ),
+                ),
+                const Text(""),
+              ],
+            );
+          } else {
+            return SearchResultsList(results: snapshot.data!);
+          }
+        },
+      );
+    }
   }
 
   void _performSearch(String searchText) {
