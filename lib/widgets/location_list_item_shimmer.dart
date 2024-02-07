@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fahrplanauskunfts_app/models/search_result.dart';
+import 'package:shimmer/shimmer.dart';
 
-class SearchResultItem extends StatelessWidget {
-  final SearchResult result;
-  final VoidCallback onTap;
-
-  const SearchResultItem({
-    Key? key,
-    required this.result,
-    required this.onTap,
-  }) : super(key: key);
+class LocationListItemShimmer extends StatelessWidget {
+  const LocationListItemShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         margin: const EdgeInsets.only(bottom: 5.0),
@@ -27,33 +21,36 @@ class SearchResultItem extends StatelessWidget {
           children: [
             Row(
               children: [
+                Container(
+                  width: 24.0,
+                  height: 24.0,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 5.0),
                 Expanded(
-                  child: Text(
-                    result.name,
-                    style: const TextStyle(fontSize: 16),
+                  child: Container(
+                    height: 16.0,
+                    color: Colors.white,
                   ),
                 ),
-                if (result.isBest)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Icon(
-                      Icons.star,
-                      color: Colors.orange,
-                    ),
-                  ),
               ],
             ),
+            const SizedBox(height: 5.0),
             Row(
               children: [
                 Expanded(
-                  child: Text("Ort: ${result.disassembledName}"),
+                  child: Container(
+                    height: 16.0,
+                    color: Colors.white,
+                  ),
                 ),
                 Container(
                   width: 100,
                   alignment: Alignment.centerRight,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text("Typ: ${result.type}"),
+                  child: Container(
+                    height: 16.0,
+                    width: 100.0,
+                    color: Colors.white,
                   ),
                 ),
               ],

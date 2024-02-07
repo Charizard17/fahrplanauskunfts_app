@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fahrplanauskunfts_app/models/search_result.dart';
+import 'package:fahrplanauskunfts_app/models/location.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-class SearchResultDetails extends StatelessWidget {
-  final SearchResult _selectedResult;
+class LocationDetails extends StatelessWidget {
+  final Location _selectedResult;
 
-  const SearchResultDetails({
+  const LocationDetails({
     Key? key,
-    required SearchResult selectedResult,
+    required Location selectedResult,
   })  : _selectedResult = selectedResult,
         super(key: key);
 

@@ -1,4 +1,4 @@
-class SearchResult {
+class Location {
   final String id;
   final String name;
   final String type;
@@ -7,7 +7,7 @@ class SearchResult {
   final List<double> coord;
   final bool isBest;
 
-  SearchResult({
+  Location({
     required this.id,
     required this.name,
     required this.type,
@@ -17,8 +17,8 @@ class SearchResult {
     required this.isBest,
   });
 
-  factory SearchResult.fromJson(Map<String, dynamic> json) {
-    return SearchResult(
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       type: json['type'] ?? '',

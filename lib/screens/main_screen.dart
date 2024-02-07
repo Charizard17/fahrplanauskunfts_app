@@ -1,9 +1,9 @@
-import 'package:fahrplanauskunfts_app/widgets/search_result_details.dart';
+import 'package:fahrplanauskunfts_app/widgets/location_details.dart';
+import 'package:fahrplanauskunfts_app/widgets/location_list_item_shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:fahrplanauskunfts_app/models/search_result.dart';
-import 'package:fahrplanauskunfts_app/widgets/search_results_list.dart';
-import 'package:fahrplanauskunfts_app/services/search_service.dart';
-import 'package:fahrplanauskunfts_app/widgets/shimmer_search_result_item.dart';
+import 'package:fahrplanauskunfts_app/models/location.dart';
+import 'package:fahrplanauskunfts_app/widgets/location_resutls_list.dart';
+import 'package:fahrplanauskunfts_app/services/location_search_service.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -13,14 +13,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  late Future<List<SearchResult>> _searchFuture;
-  SearchResult? _selectedResult;
+  final TextEditingController _searchQueryController = TextEditingController();
+  late Future<List<Location>> _searchLocationsFuture;
+  Location? _selectedLocation;
 
   @override
   void initState() {
     super.initState();
-    _searchFuture = Future.value([]);
+    _searchLocationsFuture = Future.value([]);
   }
 
   @override
@@ -43,15 +43,15 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 Expanded(
                   child: TextField(
-                    controller: _searchController,
+                    controller: _searchQueryController,
                     textInputAction: TextInputAction.search,
                     onSubmitted: (_) {
-                      _performSearch(_searchController.text);
+                      _performSearchLocations(_searchQueryController.text);
                     },
                     decoration: InputDecoration(
                       hintText: 'Ort eingeben',
                       suffixIcon: IconButton(
-                        onPressed: _searchController.clear,
+                        onPressed: _searchQueryController.clear,
                         icon: const Icon(Icons.clear),
                       ),
                     ),
@@ -61,14 +61,14 @@ class _MainScreenState extends State<MainScreen> {
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
-                    _performSearch(_searchController.text);
+                    _performSearchLocations(_searchQueryController.text);
                   },
                 ),
               ],
             ),
             const SizedBox(height: 16.0),
             Expanded(
-              child: _buildSearchResultWidget(),
+              child: _buildSearchLocationsWidget(),
             ),
           ],
         ),
@@ -76,8 +76,8 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildSearchResultWidget() {
-    if (_searchController.text.isEmpty) {
+  Widget _buildSearchLocationsWidget() {
+    if (_searchQueryController.text.isEmpty) {
       return SizedBox(
         width: 200,
         child: Image.asset(
@@ -85,14 +85,14 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
     } else {
-      return FutureBuilder<List<SearchResult>>(
-        future: _searchFuture,
+      return FutureBuilder<List<Location>>(
+        future: _searchLocationsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ListView.builder(
               itemCount: 3,
               itemBuilder: (context, index) {
-                return const ShimmerSearchResultItem();
+                return const LocationListItemShimmer();
               },
             );
           } else if (snapshot.hasError) {
@@ -127,13 +127,13 @@ class _MainScreenState extends State<MainScreen> {
             return Column(
               children: [
                 Expanded(
-                  child: SearchResultsList(
+                  child: LocationResultsList(
                     results: snapshot.data!,
                     onItemSelected: (result) {
                       setState(() {
-                        _selectedResult = result;
+                        _selectedLocation = result;
                       });
-                      _showDetailBottomSheet(context);
+                      _showLocationDetailsBottomSheet(context);
                     },
                   ),
                 ),
@@ -145,19 +145,20 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _showDetailBottomSheet(BuildContext context) {
+  void _showLocationDetailsBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return SearchResultDetails(selectedResult: _selectedResult!);
+        return LocationDetails(selectedResult: _selectedLocation!);
       },
     );
   }
 
-  void _performSearch(String searchText) {
+  void _performSearchLocations(String searchText) {
     setState(() {
-      _searchFuture = SearchService().searchResult(searchText);
+      _searchLocationsFuture =
+          LocationSearchService().searchLocations(searchText);
     });
   }
 }

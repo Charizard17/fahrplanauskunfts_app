@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fahrplanauskunfts_app/models/search_result.dart';
-import 'package:fahrplanauskunfts_app/widgets/search_result_item.dart';
+import 'package:fahrplanauskunfts_app/models/location.dart';
+import 'package:fahrplanauskunfts_app/widgets/location_list_item.dart';
 
-class SearchResultsList extends StatelessWidget {
-  final List<SearchResult> results;
-  final ValueChanged<SearchResult> onItemSelected;
+class LocationResultsList extends StatelessWidget {
+  final List<Location> results;
+  final ValueChanged<Location> onItemSelected;
 
-  const SearchResultsList({
+  const LocationResultsList({
     Key? key,
     required this.results,
     required this.onItemSelected,
@@ -28,7 +28,7 @@ class SearchResultsList extends StatelessWidget {
             itemCount: results.length,
             itemBuilder: (context, index) {
               final result = results[index];
-              return SearchResultItem(
+              return LocationListItem(
                 result: result,
                 onTap: () {
                   onItemSelected(result);

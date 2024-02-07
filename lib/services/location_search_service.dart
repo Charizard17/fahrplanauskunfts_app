@@ -1,19 +1,19 @@
 import 'package:dio/dio.dart';
-import 'package:fahrplanauskunfts_app/models/search_result.dart';
+import 'package:fahrplanauskunfts_app/models/location.dart';
 
-class SearchService {
+class LocationSearchService {
   final Dio _dio = Dio();
 
-  Future<List<SearchResult>> searchResult(String searchText) async {
+  Future<List<Location>> searchLocations(String searchQuery) async {
     try {
       final response = await _dio.get(
-        'https://mvvvip1.defas-fgi.de/mvv/XML_STOPFINDER_REQUEST?language=de&outputFormat=RapidJSON&coordOutputFormat=WGS84[DD:ddddd]&type_sf=any&name_sf=$searchText',
+        'https://mvvvip1.defas-fgi.de/mvv/XML_STOPFINDER_REQUEST?language=de&outputFormat=RapidJSON&coordOutputFormat=WGS84[DD:ddddd]&type_sf=any&name_sf=$searchQuery',
       );
 
       // Check if the request was successful (status code 200).
       if (response.statusCode == 200) {
         // Process the response and extract relevant information.
-        List<SearchResult> results = [];
+        List<Location> results = [];
 
         // Ensure the response is a map
         if (response.data is Map<String, dynamic>) {
@@ -21,8 +21,7 @@ class SearchService {
           List<Map<String, dynamic>> data =
               List<Map<String, dynamic>>.from(response.data['locations']);
 
-          results =
-              data.map((result) => SearchResult.fromJson(result)).toList();
+          results = data.map((result) => Location.fromJson(result)).toList();
 
           // Sort results by matchQuality in descending order
           results.sort((a, b) => b.matchQuality.compareTo(a.matchQuality));
