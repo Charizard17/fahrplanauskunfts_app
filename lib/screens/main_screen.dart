@@ -25,21 +25,23 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Fahrplanauskunfts App',
-          textAlign: TextAlign.center,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Fahrplanauskunfts App',
+            textAlign: TextAlign.center,
+          ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _buildSearchBar(),
-            const SizedBox(height: 16.0),
-            Expanded(child: _buildSearchResultsWidget()),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              _buildSearchBar(),
+              const SizedBox(height: 16.0),
+              Expanded(child: _buildSearchResultsWidget()),
+            ],
+          ),
         ),
       ),
     );
