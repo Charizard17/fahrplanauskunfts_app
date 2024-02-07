@@ -4,10 +4,12 @@ import 'package:fahrplanauskunfts_app/widgets/search_result_item.dart';
 
 class SearchResultsList extends StatelessWidget {
   final List<SearchResult> results;
+  final ValueChanged<SearchResult> onItemSelected;
 
   const SearchResultsList({
     Key? key,
     required this.results,
+    required this.onItemSelected,
   }) : super(key: key);
 
   @override
@@ -26,7 +28,12 @@ class SearchResultsList extends StatelessWidget {
             itemCount: results.length,
             itemBuilder: (context, index) {
               final result = results[index];
-              return SearchResultItem(result: result);
+              return SearchResultItem(
+                result: result,
+                onTap: () {
+                  onItemSelected(result);
+                },
+              );
             },
           ),
         ),

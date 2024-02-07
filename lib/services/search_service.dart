@@ -7,7 +7,7 @@ class SearchService {
   Future<List<SearchResult>> searchResult(String searchText) async {
     try {
       final response = await _dio.get(
-        'https://mvvvip1.defas-fgi.de/mvv/XML_STOPFINDER_REQUEST?language=de&outputFormat=RapidJSON&type_sf=%20any&name_sf=$searchText',
+        'https://mvvvip1.defas-fgi.de/mvv/XML_STOPFINDER_REQUEST?language=de&outputFormat=RapidJSON&coordOutputFormat=WGS84[DD:ddddd]&type_sf=any&name_sf=$searchText',
       );
 
       // Check if the request was successful (status code 200).

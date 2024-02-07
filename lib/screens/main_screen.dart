@@ -1,3 +1,4 @@
+import 'package:fahrplanauskunfts_app/widgets/search_result_details.dart';
 import 'package:flutter/material.dart';
 import 'package:fahrplanauskunfts_app/models/search_result.dart';
 import 'package:fahrplanauskunfts_app/widgets/search_results_list.dart';
@@ -14,6 +15,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<SearchResult>> _searchFuture;
+  SearchResult? _selectedResult;
 
   @override
   void initState() {
@@ -75,7 +77,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildSearchResultWidget() {
-    // Check if a search has been performed
     if (_searchController.text.isEmpty) {
       return SizedBox(
         width: 200,
@@ -84,7 +85,6 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
     } else {
-      // Show search results
       return FutureBuilder<List<SearchResult>>(
         future: _searchFuture,
         builder: (context, snapshot) {
@@ -124,11 +124,35 @@ class _MainScreenState extends State<MainScreen> {
               ],
             );
           } else {
-            return SearchResultsList(results: snapshot.data!);
+            return Column(
+              children: [
+                Expanded(
+                  child: SearchResultsList(
+                    results: snapshot.data!,
+                    onItemSelected: (result) {
+                      setState(() {
+                        _selectedResult = result;
+                      });
+                      _showDetailBottomSheet(context);
+                    },
+                  ),
+                ),
+              ],
+            );
           }
         },
       );
     }
+  }
+
+  void _showDetailBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SearchResultDetails(selectedResult: _selectedResult!);
+      },
+    );
   }
 
   void _performSearch(String searchText) {

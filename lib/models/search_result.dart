@@ -24,9 +24,10 @@ class SearchResult {
       type: json['type'] ?? '',
       disassembledName: json['disassembledName'] ?? '',
       matchQuality: json['matchQuality'] ?? 0,
-      coord: (json['coord'] as List<dynamic>)
-          .map<double>((e) => e as double)
-          .toList(),
+      coord: [
+        (json['coord'] as List<dynamic>)[1] as double,
+        (json['coord'] as List<dynamic>)[0] as double,
+      ],
       isBest: json['isBest'] ?? false,
     );
   }
