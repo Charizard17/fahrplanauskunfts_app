@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:journey_planner_app/models/search_result.dart';
-import 'package:journey_planner_app/widgets/search_results_list.dart';
-import 'package:journey_planner_app/services/search_service.dart';
-import 'package:journey_planner_app/widgets/shimmer_search_result_item.dart';
+import 'package:fahrplanauskunfts_app/models/search_result.dart';
+import 'package:fahrplanauskunfts_app/widgets/search_results_list.dart';
+import 'package:fahrplanauskunfts_app/services/search_service.dart';
+import 'package:fahrplanauskunfts_app/widgets/shimmer_search_result_item.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Journey Planner App',
+          'Fahrplanauskunfts App',
           textAlign: TextAlign.center,
         ),
       ),
@@ -47,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
                       _performSearch(_searchController.text);
                     },
                     decoration: InputDecoration(
-                      hintText: 'Enter location',
+                      hintText: 'Ort eingeben',
                       suffixIcon: IconButton(
                         onPressed: _searchController.clear,
                         icon: const Icon(Icons.clear),
@@ -113,7 +113,7 @@ class _MainScreenState extends State<MainScreen> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("No locations found."),
+                const Text("Es wurden keine Orte gefunden.."),
                 SizedBox(
                   width: 200,
                   child: Image.asset(

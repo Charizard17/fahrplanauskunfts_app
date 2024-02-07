@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:journey_planner_app/models/search_result.dart';
+import 'package:fahrplanauskunfts_app/models/search_result.dart';
 
 class SearchService {
   final Dio _dio = Dio();
@@ -26,11 +26,8 @@ class SearchService {
 
           // Sort results by matchQuality in descending order
           results.sort((a, b) => b.matchQuality.compareTo(a.matchQuality));
-
-          // Filter results based on matchQuality >= 900
-          // results = results.where((result) => result.matchQuality >= 900).toList();
         } else {
-          throw 'Unexpected response format';
+          throw 'Unerwartetes Reaktionsformat';
         }
 
         return results;
@@ -39,21 +36,22 @@ class SearchService {
           requestOptions: response.requestOptions,
           response: response,
           type: DioExceptionType.badResponse,
-          error: 'Failed to load data, status code: ${response.statusCode}',
+          error:
+              'Daten konnten nicht geladen werden, Statuscode: ${response.statusCode}',
         );
       }
     } on DioException catch (error) {
       if (error.type == DioExceptionType.badResponse) {
-        throw 'Bad response';
+        throw 'Schlechte Reaktion';
       } else if (error.type == DioExceptionType.connectionTimeout) {
-        throw 'Connection timeout. Check your connection';
+        throw 'Zeitüberschreitung der Verbindung. Überprüfen Sie Ihre Verbindung';
       } else if (error.type == DioExceptionType.receiveTimeout) {
-        throw 'Receive timeout. Unable to connect to the server';
+        throw 'Zeitüberschreitung beim Empfang. Verbindung zum Server nicht möglich';
       } else {
-        throw 'Something went wrong: $error';
+        throw 'Etwas ist schief gelaufen: $error';
       }
     } catch (error) {
-      throw 'Unexpected error occurred: $error';
+      throw 'Ein unerwarteter Fehler ist aufgetreten: $error';
     }
   }
 }

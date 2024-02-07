@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:journey_planner_app/models/search_result.dart';
+import 'package:fahrplanauskunfts_app/models/search_result.dart';
 
 class SearchResultItem extends StatelessWidget {
   final SearchResult result;
