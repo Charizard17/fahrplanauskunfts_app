@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fahrplanauskunfts_app/models/location.dart';
 import 'package:fahrplanauskunfts_app/widgets/location_details.dart';
 import 'package:fahrplanauskunfts_app/widgets/location_list_item_shimmer.dart';
-import 'package:fahrplanauskunfts_app/services/location_search_service.dart';
+import 'package:fahrplanauskunfts_app/services/api_location_search_service.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -139,7 +139,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _performSearchLocations(String searchText) {
     setState(() {
-      _searchFuture = LocationSearchService().searchLocations(searchText);
+      _searchFuture = ApiLocationSearchService().searchLocations(searchText);
     });
   }
 
