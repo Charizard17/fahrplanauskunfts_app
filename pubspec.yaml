@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.1.1
   http: ^1.2.0
   shimmer: ^3.0.0
   flutter_map: ^5.0.0
