@@ -1,8 +1,8 @@
+import 'package:fahrplanauskunfts_app/widgets/location_results_list.dart';
 import 'package:flutter/material.dart';
 import 'package:fahrplanauskunfts_app/models/location.dart';
 import 'package:fahrplanauskunfts_app/widgets/location_details.dart';
 import 'package:fahrplanauskunfts_app/widgets/location_list_item_shimmer.dart';
-import 'package:fahrplanauskunfts_app/widgets/location_resutls_list.dart';
 import 'package:fahrplanauskunfts_app/services/location_search_service.dart';
 
 class MainScreen extends StatefulWidget {
@@ -28,9 +28,16 @@ class _MainScreenState extends State<MainScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Fahrplanauskunfts App',
-            textAlign: TextAlign.center,
+          title: const Center(
+            child: Text(
+              'Fahrplanauskunfts App',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple,
+              ),
+            ),
           ),
         ),
         body: Padding(
@@ -50,12 +57,19 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildSearchBar() {
     return Row(
       children: [
-        const Icon(Icons.location_pin),
+        const Icon(
+          Icons.location_pin,
+          color: Colors.purple,
+          size: 30,
+        ),
         Expanded(
           child: TextField(
             controller: _searchController,
             textInputAction: TextInputAction.search,
             onSubmitted: _performSearchLocations,
+            style: const TextStyle(
+              fontSize: 18,
+            ),
             decoration: InputDecoration(
               hintText: 'Ort eingeben',
               suffixIcon: IconButton(
@@ -67,7 +81,11 @@ class _MainScreenState extends State<MainScreen> {
         ),
         const SizedBox(width: 8.0),
         IconButton(
-          icon: const Icon(Icons.search),
+          icon: const Icon(
+            Icons.search,
+            color: Colors.purple,
+            size: 40,
+          ),
           onPressed: () => _performSearchLocations(_searchController.text),
         ),
       ],

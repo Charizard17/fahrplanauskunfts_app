@@ -31,12 +31,28 @@ class LocationDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                _selectedResult.name,
-                style: const TextStyle(
-                  fontSize: 18,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _selectedResult.name,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  if (_selectedResult.isBest)
+                    const Text(
+                      "beste Wahl",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.deepOrange,
+                      ),
+                    ),
+                ],
               ),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -84,7 +100,7 @@ class LocationDetails extends StatelessWidget {
                             return const Icon(
                               size: 50,
                               Icons.location_on,
-                              color: Colors.blue,
+                              color: Colors.purple,
                             );
                           },
                         ),
@@ -95,12 +111,24 @@ class LocationDetails extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Center(
-                child: ElevatedButton(
-                  onPressed: () {},
+                child: OutlinedButton(
+                  onPressed: () {
+                    // TODO
+                    // Use selected location
+                    debugPrint("Locations selected: ${_selectedResult.name}");
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(
+                      width: 2.0,
+                      color: Colors.purple,
+                    ),
+                  ),
                   child: const Text(
                     'Standort auswählen',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple,
                     ),
                   ),
                 ),

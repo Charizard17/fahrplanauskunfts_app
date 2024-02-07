@@ -16,11 +16,23 @@ class LocationListItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        margin: const EdgeInsets.only(bottom: 5.0),
+        padding: const EdgeInsets.all(12.0),
+        margin: const EdgeInsets.only(
+          bottom: 10.0,
+          right: 5,
+          left: 5,
+        ),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black, width: 0.5),
-          borderRadius: BorderRadius.circular(5),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,30 +42,40 @@ class LocationListItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     result.name,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 if (result.isBest)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Icon(
-                      Icons.star,
-                      color: Colors.orange,
-                    ),
+                  const Icon(
+                    Icons.star,
+                    color: Colors.deepOrange,
                   ),
               ],
             ),
+            const SizedBox(height: 5.0),
             Row(
               children: [
                 Expanded(
-                  child: Text("Ort: ${result.disassembledName}"),
+                  child: Text(
+                    "Ort: ${result.disassembledName}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
                 Container(
-                  width: 100,
                   alignment: Alignment.centerRight,
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text("Typ: ${result.type}"),
+                    child: Text(
+                      "Typ: ${result.type}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
                 ),
               ],

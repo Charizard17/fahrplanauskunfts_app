@@ -21,8 +21,12 @@ class LocationResultsList extends StatelessWidget {
           results.length > 1
               ? "${results.length} Orte gefunden"
               : "${results.length} Ort gefunden",
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        const SizedBox(height: 5.0),
+        const SizedBox(height: 10.0),
         Expanded(
           child: ListView.builder(
             itemCount: results.length,
