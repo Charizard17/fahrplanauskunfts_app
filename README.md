@@ -53,3 +53,13 @@ Fahrplanauskunfts App is a Flutter application designed to provide users with pu
 ## API
 
 - **MVV API:** this app uses MVV API for getting locations list
+
+## Running Tests
+
+To run tests for the app, execute the following command in the terminal:
+
+```bash
+flutter test
+```
+
+This command will execute all the tests defined in the project, ensuring the correctness and stability of the app's functionality.
