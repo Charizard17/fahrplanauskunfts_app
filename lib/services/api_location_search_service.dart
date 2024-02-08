@@ -8,7 +8,7 @@ class ApiLocationSearchService {
 
   Future<List<Location>> searchLocations(
       String searchQuery, http.Client client) async {
-    final response = await fetchLocations(searchQuery, client);
+    final response = await fetchData(searchQuery, client);
 
     if (response.statusCode != 200) {
       throw Exception(
@@ -19,7 +19,7 @@ class ApiLocationSearchService {
     return parseLocations(responseData);
   }
 
-  Future<http.Response> fetchLocations(
+  Future<http.Response> fetchData(
       String searchQuery, http.Client client) async {
     return await client.get(Uri.parse(_baseURL + searchQuery));
   }

@@ -31,7 +31,7 @@ void main() {
   };
 
   group('ApiLocationSearchService', () {
-    test('fetchLocations returns response from HTTP client', () async {
+    test('fetchData returns response from HTTP client', () async {
       final client = MockClient((request) async {
         return http.Response('{"locations": []}', 200);
       });
@@ -39,7 +39,7 @@ void main() {
       final apiLocationSearchService = ApiLocationSearchService();
 
       final response =
-          await apiLocationSearchService.fetchLocations('query', client);
+          await apiLocationSearchService.fetchData('query', client);
 
       expect(response.statusCode, equals(200));
     });
