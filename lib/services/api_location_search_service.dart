@@ -10,46 +10,43 @@ class ApiLocationSearchService {
       String searchQuery, http.Client client) async {
     final response = await fetchLocations(searchQuery, client);
 
-    if (response.statusCode == 200) {
-      final responseData = parseResponse(response);
-      return parseLocations(responseData);
-    } else {
+    if (response.statusCode != 200) {
       throw Exception(
         'Fehler beim Laden der Daten, Statuscode: ${response.statusCode}',
       );
     }
+    final responseData = parseResponse(response);
+    return parseLocations(responseData);
   }
 
   Future<http.Response> fetchLocations(
       String searchQuery, http.Client client) async {
-    final response = await client.get(Uri.parse(_baseURL + searchQuery));
-    return response;
+    return await client.get(Uri.parse(_baseURL + searchQuery));
   }
 
   dynamic parseResponse(http.Response response) {
-    final responseData = jsonDecode(utf8.decode(response.bodyBytes));
-    return responseData;
+    return jsonDecode(utf8.decode(response.bodyBytes));
   }
 
   List<Location> parseLocations(dynamic responseData) {
-    if (responseData is Map<String, dynamic>) {
-      final locationsData = responseData['locations'];
-
-      if (locationsData is List<dynamic>) {
-        final List<Map<String, dynamic>> data =
-            List<Map<String, dynamic>>.from(locationsData);
-        final List<Location> results =
-            data.map((result) => Location.fromJson(result)).toList();
-
-        results.sort((a, b) => b.matchQuality.compareTo(a.matchQuality));
-        return results;
-      } else {
-        throw Exception(
-            'Unerwartetes Reaktionsformat: locations data is not a List');
-      }
-    } else {
+    if (responseData is! Map<String, dynamic>) {
       throw Exception(
-          'Unerwartetes Reaktionsformat: response data is not a Map');
+          'Unerwartetes Reaktionsformat: Reaktionsdaten sind keine Zuordnung');
     }
+
+    final locationsData = responseData['locations'];
+
+    if (locationsData is! List<dynamic>) {
+      throw Exception(
+          'Unerwartetes Reaktionsformat: Ortsdaten sind keine Liste');
+    }
+
+    final List<Map<String, dynamic>> data =
+        List<Map<String, dynamic>>.from(locationsData);
+    final List<Location> results =
+        data.map((result) => Location.fromJson(result)).toList();
+
+    results.sort((a, b) => b.matchQuality.compareTo(a.matchQuality));
+    return results;
   }
 }
